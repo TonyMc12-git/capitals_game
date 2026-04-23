@@ -1,14 +1,14 @@
-const CACHE_NAME = "capitals-game-pwa-v9";
-const APP_VERSION = "20260423-capitals9";
+const CACHE_NAME = "capitals-game-pwa-v11";
+const APP_VERSION = "20260423-capitals11";
 
 const APP_ASSETS = [
   "./",
   "./index.html",
-  "./styles.css?v=20260423-capitals9",
-  "./app.js?v=20260423-capitals9",
-  "./manifest.webmanifest?v=20260423-capitals9",
+  "./styles.css?v=20260423-capitals11",
+  "./app.js?v=20260423-capitals10",
+  "./manifest.webmanifest?v=20260423-capitals11",
   "./favicon-192.png",
-  "./apple-touch-icon.png?v=20260423-capitals9",
+  "./apple-touch-icon.png?v=20260423-capitals11",
   "./icons/icon-192-v3.png",
   "./icons/icon-512-v3.png"
 ];
