@@ -1,4 +1,4 @@
-const APP_VERSION = "20260423-capitals2";
+const APP_VERSION = "20260423-capitals3";
 const HIGH_SCORE_KEY = "capitalsGameHighScore";
 
 const rounds = [
@@ -253,7 +253,6 @@ const rounds = [
 const globalFallbackCities = buildCityPool(rounds);
 
 const promptCountryEl = document.getElementById("prompt-country");
-const promptCopyEl = document.getElementById("prompt-copy");
 const optionsGridEl = document.getElementById("options-grid");
 const scoreEl = document.getElementById("score");
 const scoreContextEl = document.getElementById("score-context");
@@ -276,18 +275,19 @@ const state = {
   correct: 0,
   presented: 0,
   correctStreak: 0,
-  streakElapsedMs: 0,
   timerId: null,
   timerSegmentStartedAt: 0,
+  streakElapsedMs: 0,
   resetTimerOnNextRound: false,
   isLocked: false,
   isComplete: false,
-  bonusTimer: null,
+  feedbackTimer: null,
   feedbackReadyAt: 0,
-  feedbackTimer: null
+  bonusTimer: null
 };
 
 registerServiceWorker();
+renderPoints();
 resetGame();
 newGameButtonEl.addEventListener("click", resetGame);
 celebrationButtonEl.addEventListener("click", () => {
@@ -299,6 +299,14 @@ celebrationButtonEl.addEventListener("click", () => {
   if (!state.isComplete) {
     startRound();
   }
+});
+
+window.addEventListener("resize", () => {
+  window.requestAnimationFrame(() => {
+    fitOptionText();
+    fitPromptText();
+    fitScoreText();
+  });
 });
 
 function resetGame() {
@@ -318,7 +326,8 @@ function resetGame() {
   renderScore();
   renderPoints();
   renderTimer(0);
-  scoreContextEl.textContent = `of ${rounds.length} curated countries`;
+  scoreContextEl.textContent = `of ${rounds.length} countries`;
+  fitScoreText();
   startRound();
 }
 
@@ -331,8 +340,8 @@ function startRound() {
   state.currentRound = state.deck.pop();
   state.isLocked = false;
   promptCountryEl.textContent = state.currentRound.country;
-  promptCopyEl.textContent = "Pick the capital city. Distractors include nearby capitals or cities plus places inside the country.";
   renderOptions(buildOptions(state.currentRound));
+  fitPromptText();
   startRoundTimer();
 }
 
@@ -362,9 +371,11 @@ function renderOptions(options) {
     button.type = "button";
     button.className = "option-button";
     button.textContent = city;
-    bindTap(button, () => chooseCity(city, button));
+    bindPress(button, () => chooseCity(city, button));
     optionsGridEl.appendChild(button);
   });
+
+  window.requestAnimationFrame(fitOptionText);
 }
 
 function chooseCity(city, button) {
@@ -394,56 +405,50 @@ function chooseCity(city, button) {
   }
 
   renderScore();
-  showFeedback(isCorrect, city);
+  showRoundResult(isCorrect);
 }
 
-function showFeedback(isCorrect, chosenCity) {
+function showRoundResult(isCorrect) {
   celebrationEl.classList.toggle("wrong", !isCorrect);
   celebrationKickerEl.textContent = isCorrect ? "Correct" : "Answer";
   celebrationTitleEl.textContent = state.currentRound.capital;
-  celebrationCopyEl.textContent = isCorrect
-    ? `${state.currentRound.capital} is the capital of ${state.currentRound.country}.`
-    : `You chose ${chosenCity}. ${state.currentRound.capital} is the capital of ${state.currentRound.country}.`;
-  showCelebration();
+  celebrationCopyEl.textContent = "";
+  showFeedback();
 }
 
 function finishGame() {
   state.isLocked = true;
   state.isComplete = true;
   stopRoundTimer();
-  promptCountryEl.textContent = "Deck complete";
-  promptCopyEl.textContent = "You finished the full curated set. Tap New game to reshuffle the countries.";
+  promptCountryEl.textContent = "Finished";
   optionsGridEl.innerHTML = "";
   celebrationEl.classList.remove("wrong");
   celebrationKickerEl.textContent = "Complete";
   celebrationTitleEl.textContent = "Full Set Done";
-  celebrationCopyEl.textContent = `You finished ${rounds.length} curated countries.`;
-  showCelebration();
+  celebrationCopyEl.textContent = "";
+  showFeedback();
 }
 
-function showCelebration() {
+function showFeedback() {
   window.clearTimeout(state.feedbackTimer);
-  state.feedbackReadyAt = Date.now() + 300;
+  state.feedbackReadyAt = Date.now() + 400;
   celebrationButtonEl.disabled = true;
   celebrationEl.classList.add("show");
   celebrationEl.setAttribute("aria-hidden", "false");
   state.feedbackTimer = window.setTimeout(() => {
     celebrationButtonEl.disabled = false;
-  }, 300);
+  }, 400);
 }
 
 function hideCelebration() {
+  window.clearTimeout(state.feedbackTimer);
+  celebrationButtonEl.disabled = false;
   celebrationEl.classList.remove("show");
   celebrationEl.setAttribute("aria-hidden", "true");
 }
 
 function renderScore() {
   scoreEl.textContent = `${state.correct} / ${state.presented}`;
-}
-
-function renderPoints() {
-  pointsScoreEl.textContent = state.points;
-  highScoreEl.textContent = state.highScore;
 }
 
 function startRoundTimer() {
@@ -493,9 +498,12 @@ function applyScoring(isCorrect, basePoints, roundMs) {
       bonusMessages.push("+100 streak bonus");
 
       const streakSeconds = roundMs / 1000;
-      if (streakSeconds <= 12) {
-        state.points += 250;
-        bonusMessages.push("+250 speed bonus");
+      if (streakSeconds <= 10) {
+        state.points += 400;
+        bonusMessages.push("+400 10-in-10 bonus");
+      } else if (streakSeconds <= 20) {
+        state.points += 200;
+        bonusMessages.push("+200 10-in-20 bonus");
       }
     }
   } else {
@@ -509,6 +517,11 @@ function applyScoring(isCorrect, basePoints, roundMs) {
   if (bonusMessages.length > 0) {
     showBonusToast(bonusMessages.join(" / "));
   }
+}
+
+function renderPoints() {
+  pointsScoreEl.textContent = state.points;
+  highScoreEl.textContent = state.highScore;
 }
 
 function updateHighScore() {
@@ -544,6 +557,36 @@ function showBonusToast(message) {
   }, 1400);
 }
 
+function fitOptionText() {
+  [...optionsGridEl.querySelectorAll(".option-button")].forEach((button) => {
+    fitTextToBox(button, { minSize: 10, step: 0.5 });
+  });
+}
+
+function fitPromptText() {
+  fitTextToBox(promptCountryEl, { minSize: 24, step: 1 });
+}
+
+function fitScoreText() {
+  fitTextToBox(scoreContextEl, { minSize: 9, step: 0.5 });
+}
+
+function fitTextToBox(element, options = {}) {
+  const minSize = options.minSize || 10;
+  const step = options.step || 1;
+  element.style.fontSize = "";
+  let fontSize = parseFloat(window.getComputedStyle(element).fontSize);
+
+  while (fontSize > minSize && doesTextOverflow(element)) {
+    fontSize -= step;
+    element.style.fontSize = `${fontSize}px`;
+  }
+}
+
+function doesTextOverflow(element) {
+  return element.scrollWidth > element.clientWidth + 1 || element.scrollHeight > element.clientHeight + 1;
+}
+
 function shuffleList(items) {
   const copy = items.slice();
   for (let index = copy.length - 1; index > 0; index -= 1) {
@@ -551,16 +594,6 @@ function shuffleList(items) {
     [copy[index], copy[swapIndex]] = [copy[swapIndex], copy[index]];
   }
   return copy;
-}
-
-function registerServiceWorker() {
-  if (!("serviceWorker" in navigator)) {
-    return;
-  }
-
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register(`./sw.js?v=${APP_VERSION}`).catch(() => {});
-  });
 }
 
 function buildCityPool(roundList) {
@@ -573,25 +606,26 @@ function buildCityPool(roundList) {
   return [...uniqueCities];
 }
 
-function bindTap(button, onTap) {
-  let touchHandledAt = 0;
-
-  button.addEventListener("pointerdown", () => button.classList.add("pressing"));
-  button.addEventListener("pointerup", () => button.classList.remove("pressing"));
-  button.addEventListener("pointercancel", () => button.classList.remove("pressing"));
-
-  button.addEventListener("touchstart", () => button.classList.add("pressing"), { passive: true });
-  button.addEventListener("touchend", () => {
+function bindPress(button, onChoose) {
+  button.addEventListener("pointerdown", (event) => {
+    event.preventDefault();
+    button.classList.add("pressing");
+    onChoose();
+  });
+  button.addEventListener("pointerup", () => {
     button.classList.remove("pressing");
-    touchHandledAt = Date.now();
-    onTap();
-  }, { passive: true });
-  button.addEventListener("touchcancel", () => button.classList.remove("pressing"), { passive: true });
+  });
+  button.addEventListener("pointercancel", () => {
+    button.classList.remove("pressing");
+  });
+}
 
-  button.addEventListener("click", () => {
-    if (Date.now() - touchHandledAt < 700) {
-      return;
-    }
-    onTap();
+function registerServiceWorker() {
+  if (!("serviceWorker" in navigator)) {
+    return;
+  }
+
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register(`./sw.js?v=${APP_VERSION}`).catch(() => {});
   });
 }

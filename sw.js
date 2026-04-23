@@ -1,11 +1,11 @@
-const CACHE_NAME = "capitals-game-pwa-v2";
-const APP_VERSION = "20260423-capitals2";
+const CACHE_NAME = "capitals-game-pwa-v3";
+const APP_VERSION = "20260423-capitals3";
 
 const APP_ASSETS = [
   "./",
   "./index.html",
-  "./styles.css?v=20260423-capitals2",
-  "./app.js?v=20260423-capitals2",
+  "./styles.css?v=20260423-capitals3",
+  "./app.js?v=20260423-capitals3",
   "./manifest.webmanifest",
   "./icons/icon.svg",
   "./icons/icon-maskable.svg"
@@ -41,6 +41,10 @@ self.addEventListener("fetch", (event) => {
       }
 
       return fetch(event.request).then((response) => {
+        if (!response || response.status !== 200) {
+          return response;
+        }
+
         const responseCopy = response.clone();
         caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseCopy));
         return response;
