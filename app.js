@@ -1,4 +1,4 @@
-const APP_VERSION = "20260423-capitals10";
+const APP_VERSION = "20260423-capitals12";
 const HIGH_SCORE_KEY = "capitalsGameHighScore";
 
 const rounds = [
