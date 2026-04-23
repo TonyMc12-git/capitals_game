@@ -1,15 +1,16 @@
-const CACHE_NAME = "capitals-game-pwa-v6";
-const APP_VERSION = "20260423-capitals6";
+const CACHE_NAME = "capitals-game-pwa-v7";
+const APP_VERSION = "20260423-capitals7";
 
 const APP_ASSETS = [
   "./",
   "./index.html",
-  "./styles.css?v=20260423-capitals6",
-  "./app.js?v=20260423-capitals6",
-  "./manifest.webmanifest?v=20260423-capitals6",
+  "./styles.css?v=20260423-capitals7",
+  "./app.js?v=20260423-capitals7",
+  "./manifest.webmanifest?v=20260423-capitals7",
+  "./favicon-192.png",
+  "./apple-touch-icon.png?v=20260423-capitals7",
   "./icons/icon-192-v2.png",
-  "./icons/icon-512-v2.png",
-  "./icons/apple-touch-icon-v2.png"
+  "./icons/icon-512-v2.png"
 ];
 
 self.addEventListener("install", (event) => {
