@@ -1,4 +1,4 @@
-const APP_VERSION = "20260423-capitals8";
+const APP_VERSION = "20260423-capitals9";
 const HIGH_SCORE_KEY = "capitalsGameHighScore";
 
 const rounds = [
@@ -601,7 +601,103 @@ function registerServiceWorker() {
     return;
   }
 
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register(`./sw.js?v=${APP_VERSION}`).catch(() => {});
+  let isRefreshing = false;
+  let lastVersionCheck = 0;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (isRefreshing) {
+      return;
+    }
+
+    isRefreshing = true;
+    window.location.reload();
   });
+  navigator.serviceWorker.addEventListener("message", (event) => {
+    if (event.data && event.data.type === "APP_UPDATED" && event.data.version !== APP_VERSION) {
+      window.location.reload();
+    }
+  });
+
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register(`./sw.js?v=${APP_VERSION}`).then((registration) => {
+      watchForServiceWorkerUpdate(registration);
+      checkForAppUpdate(registration);
+      checkVersionFile();
+    }).catch(() => {});
+  });
+
+  window.addEventListener("pageshow", () => {
+    checkForAppUpdate();
+    checkVersionFile();
+  });
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+      checkForAppUpdate();
+      checkVersionFile();
+    }
+  });
+
+  function checkVersionFile() {
+    const now = Date.now();
+    if (now - lastVersionCheck < 1500) {
+      return;
+    }
+
+    lastVersionCheck = now;
+    fetch(`./sw.js?check=${now}`, { cache: "no-store" })
+      .then((response) => response.ok ? response.text() : "")
+      .then((versionText) => {
+        const versionMatch = versionText.match(/APP_VERSION\s*=\s*"([^"]+)"/);
+        const latestVersion = versionMatch ? versionMatch[1] : "";
+        if (!latestVersion || latestVersion === APP_VERSION) {
+          return;
+        }
+
+        if (sessionStorage.getItem("pendingCapitalsAppVersion") === latestVersion) {
+          return;
+        }
+
+        sessionStorage.setItem("pendingCapitalsAppVersion", latestVersion);
+        navigator.serviceWorker.getRegistration().then((registration) => {
+          if (registration && registration.waiting) {
+            registration.waiting.postMessage({ type: "SKIP_WAITING" });
+          }
+        }).finally(() => {
+          window.location.replace(`./index.html?app-version=${latestVersion}`);
+        });
+      })
+      .catch(() => {});
+  }
+}
+
+function watchForServiceWorkerUpdate(registration) {
+  registration.addEventListener("updatefound", () => {
+    const installingWorker = registration.installing;
+    if (!installingWorker) {
+      return;
+    }
+
+    installingWorker.addEventListener("statechange", () => {
+      if (installingWorker.state === "installed" && navigator.serviceWorker.controller) {
+        installingWorker.postMessage({ type: "SKIP_WAITING" });
+      }
+    });
+  });
+}
+
+function checkForAppUpdate(registration) {
+  const updateRegistration = registration
+    ? Promise.resolve(registration)
+    : navigator.serviceWorker.getRegistration();
+
+  updateRegistration.then((activeRegistration) => {
+    if (!activeRegistration) {
+      return;
+    }
+
+    activeRegistration.update().catch(() => {});
+    if (activeRegistration.waiting) {
+      activeRegistration.waiting.postMessage({ type: "SKIP_WAITING" });
+    }
+  }).catch(() => {});
 }

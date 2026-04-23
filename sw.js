@@ -1,14 +1,14 @@
-const CACHE_NAME = "capitals-game-pwa-v8";
-const APP_VERSION = "20260423-capitals8";
+const CACHE_NAME = "capitals-game-pwa-v9";
+const APP_VERSION = "20260423-capitals9";
 
 const APP_ASSETS = [
   "./",
   "./index.html",
-  "./styles.css?v=20260423-capitals8",
-  "./app.js?v=20260423-capitals8",
-  "./manifest.webmanifest?v=20260423-capitals8",
+  "./styles.css?v=20260423-capitals9",
+  "./app.js?v=20260423-capitals9",
+  "./manifest.webmanifest?v=20260423-capitals9",
   "./favicon-192.png",
-  "./apple-touch-icon.png?v=20260423-capitals8",
+  "./apple-touch-icon.png?v=20260423-capitals9",
   "./icons/icon-192-v3.png",
   "./icons/icon-512-v3.png"
 ];
@@ -26,6 +26,12 @@ self.addEventListener("activate", (event) => {
   );
 });
 
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
+});
+
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") {
     return;
@@ -36,21 +42,31 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  event.respondWith(
-    caches.match(event.request).then((cached) => {
-      if (cached) {
-        return cached;
-      }
-
-      return fetch(event.request).then((response) => {
-        if (!response || response.status !== 200) {
+  if (event.request.mode === "navigate") {
+    event.respondWith(
+      fetch(new Request(event.request, { cache: "reload" }))
+        .then((response) => {
+          const responseCopy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put("./index.html", responseCopy));
           return response;
-        }
+        })
+        .catch(() => caches.match("./index.html"))
+    );
+    return;
+  }
 
+  if (requestUrl.pathname.endsWith("/sw.js")) {
+    event.respondWith(fetch(new Request(event.request, { cache: "reload" })));
+    return;
+  }
+
+  event.respondWith(
+    fetch(new Request(event.request, { cache: "reload" }))
+      .then((response) => {
         const responseCopy = response.clone();
         caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseCopy));
         return response;
-      });
-    })
+      })
+      .catch(() => caches.match(event.request))
   );
 });
