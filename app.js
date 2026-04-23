@@ -1,256 +1,247 @@
-const APP_VERSION = "20260423-capitals3";
+const APP_VERSION = "20260423-capitals8";
 const HIGH_SCORE_KEY = "capitalsGameHighScore";
 
 const rounds = [
-  {
-    country: "France",
-    capital: "Paris",
-    nearbyCities: ["Brussels", "Amsterdam", "London", "Luxembourg City", "Geneva", "Milan", "Turin", "Barcelona"],
-    domesticCities: ["Marseille", "Lyon", "Toulouse", "Nice", "Bordeaux", "Lille", "Nantes", "Strasbourg"]
-  },
-  {
-    country: "Germany",
-    capital: "Berlin",
-    nearbyCities: ["Warsaw", "Prague", "Vienna", "Amsterdam", "Brussels", "Zurich", "Copenhagen", "Luxembourg City"],
-    domesticCities: ["Hamburg", "Munich", "Cologne", "Frankfurt", "Stuttgart", "Leipzig", "Dresden", "Dortmund"]
-  },
-  {
-    country: "Italy",
-    capital: "Rome",
-    nearbyCities: ["Milan", "Venice", "Zurich", "Vienna", "Ljubljana", "Valletta", "Tunis", "Marseille"],
-    domesticCities: ["Naples", "Turin", "Florence", "Bologna", "Palermo", "Genoa", "Bari", "Catania"]
-  },
-  {
-    country: "Spain",
-    capital: "Madrid",
-    nearbyCities: ["Lisbon", "Barcelona", "Marseille", "Andorra la Vella", "Tangier", "Casablanca", "Bordeaux", "Bilbao"],
-    domesticCities: ["Seville", "Valencia", "Malaga", "Zaragoza", "Granada", "Murcia", "Palma", "Alicante"]
-  },
-  {
-    country: "Portugal",
-    capital: "Lisbon",
-    nearbyCities: ["Madrid", "Seville", "Vigo", "Casablanca", "Rabat", "Tangier", "Porto Santo", "Badajoz"],
-    domesticCities: ["Porto", "Braga", "Coimbra", "Faro", "Aveiro", "Evora", "Funchal", "Ponta Delgada"]
-  },
-  {
-    country: "United Kingdom",
-    capital: "London",
-    nearbyCities: ["Dublin", "Paris", "Brussels", "Amsterdam", "Cardiff", "Belfast", "Edinburgh", "Oslo"],
-    domesticCities: ["Manchester", "Birmingham", "Glasgow", "Liverpool", "Leeds", "Bristol", "Newcastle", "Sheffield"]
-  },
-  {
-    country: "Ireland",
-    capital: "Dublin",
-    nearbyCities: ["London", "Belfast", "Cardiff", "Glasgow", "Liverpool", "Edinburgh", "Paris", "Reykjavik"],
-    domesticCities: ["Cork", "Galway", "Limerick", "Waterford", "Kilkenny", "Sligo", "Drogheda", "Wexford"]
-  },
-  {
-    country: "Netherlands",
-    capital: "Amsterdam",
-    nearbyCities: ["Brussels", "Rotterdam", "The Hague", "Cologne", "Antwerp", "Luxembourg City", "London", "Berlin"],
-    domesticCities: ["Rotterdam", "The Hague", "Utrecht", "Eindhoven", "Groningen", "Maastricht", "Leiden", "Haarlem"]
-  },
-  {
-    country: "Belgium",
-    capital: "Brussels",
-    nearbyCities: ["Amsterdam", "Antwerp", "Rotterdam", "Paris", "Luxembourg City", "Cologne", "London", "Lille"],
-    domesticCities: ["Antwerp", "Ghent", "Bruges", "Liege", "Namur", "Leuven", "Mons", "Mechelen"]
-  },
-  {
-    country: "Switzerland",
-    capital: "Bern",
-    nearbyCities: ["Zurich", "Geneva", "Milan", "Munich", "Lyon", "Turin", "Vienna", "Luxembourg City"],
-    domesticCities: ["Zurich", "Geneva", "Basel", "Lausanne", "Lucerne", "Lugano", "St. Gallen", "Winterthur"]
-  },
-  {
-    country: "Austria",
-    capital: "Vienna",
-    nearbyCities: ["Prague", "Bratislava", "Budapest", "Munich", "Ljubljana", "Zurich", "Venice", "Zagreb"],
-    domesticCities: ["Salzburg", "Graz", "Linz", "Innsbruck", "Klagenfurt", "Bregenz", "Villach", "Wels"]
-  },
-  {
-    country: "Poland",
-    capital: "Warsaw",
-    nearbyCities: ["Berlin", "Prague", "Bratislava", "Vilnius", "Kyiv", "Minsk", "Gdansk", "Krakow"],
-    domesticCities: ["Krakow", "Gdansk", "Wroclaw", "Poznan", "Lodz", "Szczecin", "Lublin", "Katowice"]
-  },
-  {
-    country: "Czechia",
-    capital: "Prague",
-    nearbyCities: ["Berlin", "Vienna", "Bratislava", "Warsaw", "Dresden", "Munich", "Brno", "Budapest"],
-    domesticCities: ["Brno", "Ostrava", "Plzen", "Liberec", "Olomouc", "Ceske Budejovice", "Pardubice", "Hradec Kralove"]
-  },
-  {
-    country: "Hungary",
-    capital: "Budapest",
-    nearbyCities: ["Vienna", "Bratislava", "Zagreb", "Belgrade", "Ljubljana", "Prague", "Cluj-Napoca", "Bucharest"],
-    domesticCities: ["Debrecen", "Szeged", "Pecs", "Gyor", "Miskolc", "Eger", "Kecskemet", "Sopron"]
-  },
-  {
-    country: "Greece",
-    capital: "Athens",
-    nearbyCities: ["Sofia", "Skopje", "Tirana", "Istanbul", "Izmir", "Nicosia", "Thessaloniki", "Valletta"],
-    domesticCities: ["Thessaloniki", "Patras", "Heraklion", "Larissa", "Volos", "Kalamata", "Rhodes", "Ioannina"]
-  },
-  {
-    country: "Turkey",
-    capital: "Ankara",
-    nearbyCities: ["Istanbul", "Sofia", "Athens", "Tbilisi", "Yerevan", "Baku", "Aleppo", "Tehran"],
-    domesticCities: ["Istanbul", "Izmir", "Bursa", "Antalya", "Adana", "Konya", "Gaziantep", "Trabzon"]
-  },
-  {
-    country: "Egypt",
-    capital: "Cairo",
-    nearbyCities: ["Alexandria", "Jerusalem", "Amman", "Khartoum", "Tripoli", "Riyadh", "Jeddah", "Nicosia"],
-    domesticCities: ["Alexandria", "Giza", "Luxor", "Aswan", "Port Said", "Sharm El Sheikh", "Hurghada", "Mansoura"]
-  },
-  {
-    country: "Morocco",
-    capital: "Rabat",
-    nearbyCities: ["Casablanca", "Tangier", "Algiers", "Madrid", "Lisbon", "Seville", "Tunis", "Marrakesh"],
-    domesticCities: ["Casablanca", "Tangier", "Marrakesh", "Fes", "Agadir", "Meknes", "Oujda", "Tetouan"]
-  },
-  {
-    country: "Nigeria",
-    capital: "Abuja",
-    nearbyCities: ["Lagos", "Accra", "Yaounde", "Douala", "Niamey", "Port Harcourt", "Cotonou", "Lome"],
-    domesticCities: ["Lagos", "Kano", "Ibadan", "Port Harcourt", "Benin City", "Kaduna", "Jos", "Enugu"]
-  },
-  {
-    country: "Kenya",
-    capital: "Nairobi",
-    nearbyCities: ["Kampala", "Addis Ababa", "Dar es Salaam", "Mogadishu", "Kigali", "Juba", "Mombasa", "Arusha"],
-    domesticCities: ["Mombasa", "Kisumu", "Nakuru", "Eldoret", "Naivasha", "Malindi", "Thika", "Garissa"]
-  },
-  {
-    country: "South Africa",
-    capital: "Pretoria",
-    nearbyCities: ["Johannesburg", "Cape Town", "Gaborone", "Maputo", "Windhoek", "Maseru", "Mbabane", "Harare"],
-    domesticCities: ["Johannesburg", "Cape Town", "Durban", "Bloemfontein", "Port Elizabeth", "Polokwane", "Kimberley", "Nelspruit"]
-  },
-  {
-    country: "India",
-    capital: "New Delhi",
-    nearbyCities: ["Mumbai", "Kathmandu", "Dhaka", "Lahore", "Karachi", "Colombo", "Thimphu", "Islamabad"],
-    domesticCities: ["Mumbai", "Bengaluru", "Chennai", "Kolkata", "Hyderabad", "Pune", "Jaipur", "Ahmedabad"]
-  },
-  {
-    country: "Pakistan",
-    capital: "Islamabad",
-    nearbyCities: ["Lahore", "Karachi", "New Delhi", "Kabul", "Tehran", "Jaipur", "Amritsar", "Dhaka"],
-    domesticCities: ["Lahore", "Karachi", "Peshawar", "Quetta", "Faisalabad", "Rawalpindi", "Multan", "Hyderabad"]
-  },
-  {
-    country: "China",
-    capital: "Beijing",
-    nearbyCities: ["Shanghai", "Seoul", "Pyongyang", "Ulaanbaatar", "Taipei", "Tokyo", "Hong Kong", "Tianjin"],
-    domesticCities: ["Shanghai", "Guangzhou", "Shenzhen", "Chengdu", "Wuhan", "Xi'an", "Hangzhou", "Nanjing"]
-  },
-  {
-    country: "Japan",
-    capital: "Tokyo",
-    nearbyCities: ["Seoul", "Busan", "Taipei", "Shanghai", "Sapporo", "Osaka", "Nagoya", "Fukuoka"],
-    domesticCities: ["Osaka", "Kyoto", "Nagoya", "Sapporo", "Fukuoka", "Hiroshima", "Sendai", "Yokohama"]
-  },
-  {
-    country: "South Korea",
-    capital: "Seoul",
-    nearbyCities: ["Busan", "Tokyo", "Beijing", "Shanghai", "Pyongyang", "Daejeon", "Incheon", "Jeju City"],
-    domesticCities: ["Busan", "Incheon", "Daegu", "Daejeon", "Gwangju", "Suwon", "Ulsan", "Jeju City"]
-  },
-  {
-    country: "Thailand",
-    capital: "Bangkok",
-    nearbyCities: ["Chiang Mai", "Phnom Penh", "Vientiane", "Yangon", "Ho Chi Minh City", "Kuala Lumpur", "Singapore", "Da Nang"],
-    domesticCities: ["Chiang Mai", "Phuket", "Pattaya", "Khon Kaen", "Hat Yai", "Ayutthaya", "Krabi", "Udon Thani"]
-  },
-  {
-    country: "Vietnam",
-    capital: "Hanoi",
-    nearbyCities: ["Ho Chi Minh City", "Vientiane", "Phnom Penh", "Nanning", "Bangkok", "Da Nang", "Luang Prabang", "Hong Kong"],
-    domesticCities: ["Ho Chi Minh City", "Da Nang", "Hai Phong", "Hue", "Can Tho", "Nha Trang", "Dalat", "Vung Tau"]
-  },
-  {
-    country: "Indonesia",
-    capital: "Jakarta",
-    nearbyCities: ["Singapore", "Kuala Lumpur", "Bandung", "Surabaya", "Dili", "Manila", "Bangkok", "Denpasar"],
-    domesticCities: ["Surabaya", "Bandung", "Medan", "Yogyakarta", "Makassar", "Semarang", "Denpasar", "Balikpapan"]
-  },
-  {
-    country: "Australia",
-    capital: "Canberra",
-    nearbyCities: ["Sydney", "Melbourne", "Auckland", "Wellington", "Port Moresby", "Suva", "Christchurch", "Brisbane"],
-    domesticCities: ["Sydney", "Melbourne", "Brisbane", "Perth", "Adelaide", "Hobart", "Darwin", "Gold Coast"]
-  },
-  {
-    country: "New Zealand",
-    capital: "Wellington",
-    nearbyCities: ["Auckland", "Sydney", "Melbourne", "Canberra", "Suva", "Christchurch", "Brisbane", "Hobart"],
-    domesticCities: ["Auckland", "Christchurch", "Hamilton", "Dunedin", "Queenstown", "Rotorua", "Napier", "Tauranga"]
-  },
-  {
-    country: "Canada",
-    capital: "Ottawa",
-    nearbyCities: ["Toronto", "Montreal", "Quebec City", "New York", "Chicago", "Washington", "Detroit", "Winnipeg"],
-    domesticCities: ["Toronto", "Montreal", "Vancouver", "Calgary", "Edmonton", "Quebec City", "Halifax", "Winnipeg"]
-  },
-  {
-    country: "United States",
-    capital: "Washington",
-    nearbyCities: ["New York", "Toronto", "Ottawa", "Montreal", "Mexico City", "Chicago", "Atlanta", "Havana"],
-    domesticCities: ["New York", "Los Angeles", "Chicago", "Houston", "Miami", "Seattle", "Boston", "Atlanta"]
-  },
-  {
-    country: "Mexico",
-    capital: "Mexico City",
-    nearbyCities: ["Guadalajara", "Monterrey", "Houston", "Guatemala City", "Belize City", "Havana", "San Antonio", "Merida"],
-    domesticCities: ["Guadalajara", "Monterrey", "Puebla", "Merida", "Tijuana", "Cancun", "Oaxaca", "Leon"]
-  },
-  {
-    country: "Brazil",
-    capital: "Brasilia",
-    nearbyCities: ["Sao Paulo", "Rio de Janeiro", "Buenos Aires", "Asuncion", "Montevideo", "Lima", "Bogota", "La Paz"],
-    domesticCities: ["Sao Paulo", "Rio de Janeiro", "Salvador", "Recife", "Fortaleza", "Manaus", "Belo Horizonte", "Curitiba"]
-  },
-  {
-    country: "Argentina",
-    capital: "Buenos Aires",
-    nearbyCities: ["Montevideo", "Santiago", "Asuncion", "Porto Alegre", "Cordoba", "Mendoza", "Sao Paulo", "La Paz"],
-    domesticCities: ["Cordoba", "Rosario", "Mendoza", "Salta", "Mar del Plata", "Ushuaia", "La Plata", "Bariloche"]
-  },
-  {
-    country: "Chile",
-    capital: "Santiago",
-    nearbyCities: ["Mendoza", "Buenos Aires", "La Paz", "Lima", "Valparaiso", "Cordoba", "Montevideo", "Antofagasta"],
-    domesticCities: ["Valparaiso", "Concepcion", "Antofagasta", "La Serena", "Puerto Montt", "Temuco", "Iquique", "Punta Arenas"]
-  },
-  {
-    country: "Peru",
-    capital: "Lima",
-    nearbyCities: ["Quito", "La Paz", "Santiago", "Bogota", "Guayaquil", "Cusco", "Arequipa", "Trujillo"],
-    domesticCities: ["Cusco", "Arequipa", "Trujillo", "Piura", "Iquitos", "Chiclayo", "Tacna", "Puno"]
-  },
-  {
-    country: "Colombia",
-    capital: "Bogota",
-    nearbyCities: ["Quito", "Caracas", "Panama City", "Lima", "Medellin", "Cali", "Guayaquil", "San Jose"],
-    domesticCities: ["Medellin", "Cali", "Cartagena", "Barranquilla", "Bucaramanga", "Pereira", "Santa Marta", "Manizales"]
-  },
-  {
-    country: "Saudi Arabia",
-    capital: "Riyadh",
-    nearbyCities: ["Jeddah", "Mecca", "Medina", "Amman", "Cairo", "Doha", "Kuwait City", "Dubai"],
-    domesticCities: ["Jeddah", "Mecca", "Medina", "Dammam", "Taif", "Tabuk", "Abha", "Khobar"]
-  },
-  {
-    country: "United Arab Emirates",
-    capital: "Abu Dhabi",
-    nearbyCities: ["Dubai", "Doha", "Muscat", "Riyadh", "Manama", "Kuwait City", "Sharjah", "Jeddah"],
-    domesticCities: ["Dubai", "Sharjah", "Ajman", "Al Ain", "Fujairah", "Ras Al Khaimah", "Umm Al Quwain", "Khor Fakkan"]
-  }
+  { country: "Afghanistan", capital: "Kabul" },
+  { country: "Albania", capital: "Tirana" },
+  { country: "Algeria", capital: "Algiers" },
+  { country: "Andorra", capital: "Andorra la Vella" },
+  { country: "Angola", capital: "Luanda" },
+  { country: "Antigua and Barbuda", capital: "Saint John's" },
+  { country: "Argentina", capital: "Buenos Aires" },
+  { country: "Armenia", capital: "Yerevan" },
+  { country: "Australia", capital: "Canberra" },
+  { country: "Austria", capital: "Vienna" },
+  { country: "Azerbaijan", capital: "Baku" },
+  { country: "Bahamas", capital: "Nassau" },
+  { country: "Bahrain", capital: "Manama" },
+  { country: "Bangladesh", capital: "Dhaka" },
+  { country: "Barbados", capital: "Bridgetown" },
+  { country: "Belarus", capital: "Minsk" },
+  { country: "Belgium", capital: "Brussels" },
+  { country: "Belize", capital: "Belmopan" },
+  { country: "Benin", capital: "Porto-Novo" },
+  { country: "Bhutan", capital: "Thimphu" },
+  { country: "Bolivia", capital: "Sucre" },
+  { country: "Bosnia and Herzegovina", capital: "Sarajevo" },
+  { country: "Botswana", capital: "Gaborone" },
+  { country: "Brazil", capital: "Brasília" },
+  { country: "Brunei", capital: "Bandar Seri Begawan" },
+  { country: "Bulgaria", capital: "Sofia" },
+  { country: "Burkina Faso", capital: "Ouagadougou" },
+  { country: "Burundi", capital: "Gitega" },
+  { country: "Cabo Verde", capital: "Praia" },
+  { country: "Cambodia", capital: "Phnom Penh" },
+  { country: "Cameroon", capital: "Yaoundé" },
+  { country: "Canada", capital: "Ottawa" },
+  { country: "Central African Republic", capital: "Bangui" },
+  { country: "Chad", capital: "N'Djamena" },
+  { country: "Chile", capital: "Santiago" },
+  { country: "China", capital: "Beijing" },
+  { country: "Colombia", capital: "Bogotá" },
+  { country: "Comoros", capital: "Moroni" },
+  { country: "Congo", capital: "Brazzaville" },
+  { country: "Costa Rica", capital: "San José" },
+  { country: "Cote d'Ivoire", capital: "Yamoussoukro" },
+  { country: "Croatia", capital: "Zagreb" },
+  { country: "Cuba", capital: "Havana" },
+  { country: "Cyprus", capital: "Nicosia" },
+  { country: "Czechia", capital: "Prague" },
+  { country: "Democratic Republic of the Congo", capital: "Kinshasa" },
+  { country: "Denmark", capital: "Copenhagen" },
+  { country: "Djibouti", capital: "Djibouti" },
+  { country: "Dominica", capital: "Roseau" },
+  { country: "Dominican Republic", capital: "Santo Domingo" },
+  { country: "Ecuador", capital: "Quito" },
+  { country: "Egypt", capital: "Cairo" },
+  { country: "El Salvador", capital: "San Salvador" },
+  { country: "Equatorial Guinea", capital: "Ciudad de la Paz" },
+  { country: "Eritrea", capital: "Asmara" },
+  { country: "Estonia", capital: "Tallinn" },
+  { country: "Eswatini", capital: "Mbabane" },
+  { country: "Ethiopia", capital: "Addis Ababa" },
+  { country: "Fiji", capital: "Suva" },
+  { country: "Finland", capital: "Helsinki" },
+  { country: "France", capital: "Paris" },
+  { country: "Gabon", capital: "Libreville" },
+  { country: "Gambia", capital: "Banjul" },
+  { country: "Georgia", capital: "Tbilisi" },
+  { country: "Germany", capital: "Berlin" },
+  { country: "Ghana", capital: "Accra" },
+  { country: "Greece", capital: "Athens" },
+  { country: "Grenada", capital: "St. George's" },
+  { country: "Guatemala", capital: "Guatemala City" },
+  { country: "Guinea", capital: "Conakry" },
+  { country: "Guinea-Bissau", capital: "Bissau" },
+  { country: "Guyana", capital: "Georgetown" },
+  { country: "Haiti", capital: "Port-au-Prince" },
+  { country: "Honduras", capital: "Tegucigalpa" },
+  { country: "Hungary", capital: "Budapest" },
+  { country: "Iceland", capital: "Reykjavik" },
+  { country: "India", capital: "New Delhi" },
+  { country: "Indonesia", capital: "Jakarta" },
+  { country: "Iran", capital: "Tehran" },
+  { country: "Iraq", capital: "Baghdad" },
+  { country: "Ireland", capital: "Dublin" },
+  { country: "Israel", capital: "Jerusalem" },
+  { country: "Italy", capital: "Rome" },
+  { country: "Jamaica", capital: "Kingston" },
+  { country: "Japan", capital: "Tokyo" },
+  { country: "Jordan", capital: "Amman" },
+  { country: "Kazakhstan", capital: "Astana" },
+  { country: "Kenya", capital: "Nairobi" },
+  { country: "Kiribati", capital: "South Tarawa" },
+  { country: "Kyrgyzstan", capital: "Bishkek" },
+  { country: "Kuwait", capital: "Kuwait City" },
+  { country: "Laos", capital: "Vientiane" },
+  { country: "Latvia", capital: "Riga" },
+  { country: "Lebanon", capital: "Beirut" },
+  { country: "Lesotho", capital: "Maseru" },
+  { country: "Liberia", capital: "Monrovia" },
+  { country: "Libya", capital: "Tripoli" },
+  { country: "Liechtenstein", capital: "Vaduz" },
+  { country: "Lithuania", capital: "Vilnius" },
+  { country: "Luxembourg", capital: "Luxembourg" },
+  { country: "Madagascar", capital: "Antananarivo" },
+  { country: "Malawi", capital: "Lilongwe" },
+  { country: "Malaysia", capital: "Kuala Lumpur" },
+  { country: "Maldives", capital: "Malé" },
+  { country: "Mali", capital: "Bamako" },
+  { country: "Malta", capital: "Valletta" },
+  { country: "Marshall Islands", capital: "Majuro" },
+  { country: "Mauritania", capital: "Nouakchott" },
+  { country: "Mauritius", capital: "Port Louis" },
+  { country: "Mexico", capital: "Mexico City" },
+  { country: "Micronesia", capital: "Palikir" },
+  { country: "Moldova", capital: "Chișinău" },
+  { country: "Monaco", capital: "Monaco" },
+  { country: "Mongolia", capital: "Ulan Bator" },
+  { country: "Montenegro", capital: "Podgorica" },
+  { country: "Morocco", capital: "Rabat" },
+  { country: "Mozambique", capital: "Maputo" },
+  { country: "Myanmar", capital: "Naypyidaw" },
+  { country: "Namibia", capital: "Windhoek" },
+  { country: "Nauru", capital: "Yaren" },
+  { country: "Nepal", capital: "Kathmandu" },
+  { country: "Netherlands", capital: "Amsterdam" },
+  { country: "New Zealand", capital: "Wellington" },
+  { country: "Nicaragua", capital: "Managua" },
+  { country: "Niger", capital: "Niamey" },
+  { country: "Nigeria", capital: "Abuja" },
+  { country: "North Macedonia", capital: "Skopje" },
+  { country: "North Korea", capital: "Pyongyang" },
+  { country: "Norway", capital: "Oslo" },
+  { country: "Oman", capital: "Muscat" },
+  { country: "Pakistan", capital: "Islamabad" },
+  { country: "Palau", capital: "Ngerulmud" },
+  { country: "Panama", capital: "Panama City" },
+  { country: "Papua New Guinea", capital: "Port Moresby" },
+  { country: "Paraguay", capital: "Asunción" },
+  { country: "Peru", capital: "Lima" },
+  { country: "Philippines", capital: "Manila" },
+  { country: "Poland", capital: "Warsaw" },
+  { country: "Portugal", capital: "Lisbon" },
+  { country: "Qatar", capital: "Doha" },
+  { country: "Romania", capital: "Bucharest" },
+  { country: "Russia", capital: "Moscow" },
+  { country: "Rwanda", capital: "Kigali" },
+  { country: "Saint Kitts and Nevis", capital: "Basseterre" },
+  { country: "Saint Lucia", capital: "Castries" },
+  { country: "Saint Vincent and the Grenadines", capital: "Kingstown" },
+  { country: "Samoa", capital: "Apia" },
+  { country: "San Marino", capital: "City of San Marino" },
+  { country: "Sao Tome and Principe", capital: "São Tomé" },
+  { country: "Saudi Arabia", capital: "Riyadh" },
+  { country: "Senegal", capital: "Dakar" },
+  { country: "Serbia", capital: "Belgrade" },
+  { country: "Seychelles", capital: "Victoria" },
+  { country: "Sierra Leone", capital: "Freetown" },
+  { country: "Singapore", capital: "Singapore" },
+  { country: "Slovakia", capital: "Bratislava" },
+  { country: "Slovenia", capital: "Ljubljana" },
+  { country: "Solomon Islands", capital: "Honiara" },
+  { country: "Somalia", capital: "Mogadishu" },
+  { country: "South Africa", capital: "Pretoria" },
+  { country: "South Korea", capital: "Seoul" },
+  { country: "South Sudan", capital: "Juba" },
+  { country: "Spain", capital: "Madrid" },
+  { country: "Sri Lanka", capital: "Sri Jayawardenepura Kotte" },
+  { country: "Sudan", capital: "Khartoum" },
+  { country: "Suriname", capital: "Paramaribo" },
+  { country: "Sweden", capital: "Stockholm" },
+  { country: "Switzerland", capital: "Bern" },
+  { country: "Syria", capital: "Damascus" },
+  { country: "Tajikistan", capital: "Dushanbe" },
+  { country: "Tanzania", capital: "Dodoma" },
+  { country: "Thailand", capital: "Bangkok" },
+  { country: "Timor-Leste", capital: "Dili" },
+  { country: "Togo", capital: "Lomé" },
+  { country: "Tonga", capital: "Nuku'alofa" },
+  { country: "Trinidad and Tobago", capital: "Port of Spain" },
+  { country: "Tunisia", capital: "Tunis" },
+  { country: "Turkey", capital: "Ankara" },
+  { country: "Turkmenistan", capital: "Ashgabat" },
+  { country: "Tuvalu", capital: "Funafuti" },
+  { country: "Uganda", capital: "Kampala" },
+  { country: "Ukraine", capital: "Kyiv" },
+  { country: "United Arab Emirates", capital: "Abu Dhabi" },
+  { country: "United Kingdom", capital: "London" },
+  { country: "United States", capital: "Washington, D.C." },
+  { country: "Uruguay", capital: "Montevideo" },
+  { country: "Uzbekistan", capital: "Tashkent" },
+  { country: "Vanuatu", capital: "Port Vila" },
+  { country: "Venezuela", capital: "Caracas" },
+  { country: "Vietnam", capital: "Hanoi" },
+  { country: "Yemen", capital: "Sana'a" },
+  { country: "Zambia", capital: "Lusaka" },
+  { country: "Zimbabwe", capital: "Harare" },
+  { country: "American Samoa", capital: "Pago Pago" },
+  { country: "Anguilla", capital: "The Valley" },
+  { country: "Aland Islands", capital: "Mariehamn" },
+  { country: "Aruba", capital: "Oranjestad" },
+  { country: "Bermuda", capital: "Hamilton" },
+  { country: "British Virgin Islands", capital: "Road Town" },
+  { country: "Cayman Islands", capital: "George Town" },
+  { country: "Christmas Island", capital: "Flying Fish Cove" },
+  { country: "Cook Islands", capital: "Avarua" },
+  { country: "Cocos Islands", capital: "West Island" },
+  { country: "Curacao", capital: "Willemstad" },
+  { country: "Falkland Islands", capital: "Stanley" },
+  { country: "Faroe Islands", capital: "Tórshavn" },
+  { country: "French Polynesia", capital: "Papeetē" },
+  { country: "Gibraltar", capital: "Gibraltar" },
+  { country: "Greenland", capital: "Nuuk" },
+  { country: "Guam", capital: "Hagåtña" },
+  { country: "Guernsey", capital: "St. Peter Port" },
+  { country: "Hong Kong", capital: "City of Victoria" },
+  { country: "British Indian Ocean Territory", capital: "Diego Garcia" },
+  { country: "Isle of Man", capital: "Douglas" },
+  { country: "Jersey", capital: "Saint Helier" },
+  { country: "Kosovo", capital: "Pristina" },
+  { country: "Macau", capital: "Macau" },
+  { country: "Montserrat", capital: "Plymouth" },
+  { country: "New Caledonia", capital: "Nouméa" },
+  { country: "Norfolk Island", capital: "Kingston" },
+  { country: "Niue", capital: "Alofi" },
+  { country: "Northern Mariana Islands", capital: "Saipan" },
+  { country: "Palestine", capital: "Ramallah" },
+  { country: "Pitcairn Islands", capital: "Adamstown" },
+  { country: "Puerto Rico", capital: "San Juan" },
+  { country: "Saint Barthelemy", capital: "Gustavia" },
+  { country: "Saint Helena, Ascension and Tristan da Cunha", capital: "Jamestown" },
+  { country: "Sint Maarten", capital: "Philipsburg" },
+  { country: "South Georgia and the South Sandwich Islands", capital: "King Edward Point" },
+  { country: "French Southern Territories", capital: "Port-aux-Français" },
+  { country: "Taiwan", capital: "Taipei" },
+  { country: "Tokelau", capital: "Fakaofo" },
+  { country: "Turks and Caicos Islands", capital: "Cockburn Town" },
+  { country: "U.S. Virgin Islands", capital: "Charlotte Amalie" },
+  { country: "Vatican City", capital: "Vatican City" },
+  { country: "Wallis and Futuna", capital: "Mata-Utu" },
+  { country: "Western Sahara", capital: "El Aaiún" }
 ];
 
-const globalFallbackCities = buildCityPool(rounds);
+const capitalPool = [...new Set(rounds.map((round) => round.capital))];
 
 const promptCountryEl = document.getElementById("prompt-country");
 const optionsGridEl = document.getElementById("options-grid");
@@ -326,7 +317,7 @@ function resetGame() {
   renderScore();
   renderPoints();
   renderTimer(0);
-  scoreContextEl.textContent = `of ${rounds.length} countries`;
+  scoreContextEl.textContent = `of ${rounds.length} countries / territories`;
   fitScoreText();
   startRound();
 }
@@ -347,12 +338,7 @@ function startRound() {
 
 function buildOptions(round) {
   const options = new Set([round.capital]);
-  shuffleList(round.nearbyCities).slice(0, 8).forEach((city) => options.add(city));
-  shuffleList(round.domesticCities).slice(0, 8).forEach((city) => options.add(city));
-
-  const fallbackPool = shuffleList(globalFallbackCities.filter((city) => {
-    return city !== round.capital && !round.nearbyCities.includes(city) && !round.domesticCities.includes(city);
-  }));
+  const fallbackPool = shuffleList(capitalPool.filter((city) => city !== round.capital));
 
   for (const city of fallbackPool) {
     if (options.size >= 20) {
@@ -594,16 +580,6 @@ function shuffleList(items) {
     [copy[index], copy[swapIndex]] = [copy[swapIndex], copy[index]];
   }
   return copy;
-}
-
-function buildCityPool(roundList) {
-  const uniqueCities = new Set();
-  roundList.forEach((round) => {
-    uniqueCities.add(round.capital);
-    round.nearbyCities.forEach((city) => uniqueCities.add(city));
-    round.domesticCities.forEach((city) => uniqueCities.add(city));
-  });
-  return [...uniqueCities];
 }
 
 function bindPress(button, onChoose) {
