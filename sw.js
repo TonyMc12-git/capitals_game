@@ -1,14 +1,14 @@
-const CACHE_NAME = "capitals-game-pwa-v3";
-const APP_VERSION = "20260423-capitals3";
+const CACHE_NAME = "capitals-game-pwa-v4";
+const APP_VERSION = "20260423-capitals4";
 
 const APP_ASSETS = [
   "./",
   "./index.html",
-  "./styles.css?v=20260423-capitals3",
-  "./app.js?v=20260423-capitals3",
+  "./styles.css?v=20260423-capitals4",
+  "./app.js?v=20260423-capitals4",
   "./manifest.webmanifest",
-  "./icons/icon.svg",
-  "./icons/icon-maskable.svg"
+  "./icons/icon-v2.svg",
+  "./icons/icon-maskable-v2.svg"
 ];
 
 self.addEventListener("install", (event) => {
