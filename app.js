@@ -1,4 +1,4 @@
-const APP_VERSION = "20260424-capitals21";
+const APP_VERSION = "20260424-capitals22";
 const HIGH_SCORE_KEY = "capitalsGameHighScore";
 
 const rounds = normalizeData([
@@ -484,23 +484,23 @@ const domesticCityMap = normalizeData({
   "Afghanistan": ["Herat", "Kandahar", "Mazar-i-Sharif"],
   "Algeria": ["Oran", "Constantine", "Annaba"],
   "Angola": ["Huambo", "Lobito", "Benguela"],
-  "Argentina": ["CÃ³rdoba", "Rosario", "Mendoza"],
+  "Argentina": ["Córdoba", "Rosario", "Mendoza"],
   "Australia": ["Sydney", "Melbourne", "Brisbane", "Perth"],
   "Austria": ["Salzburg", "Graz", "Innsbruck"],
   "Bangladesh": ["Chattogram", "Khulna", "Rajshahi"],
-  "Belgium": ["Antwerp", "Ghent", "LiÃ¨ge"],
+  "Belgium": ["Antwerp", "Ghent", "Liège"],
   "Bolivia": ["Santa Cruz de la Sierra", "El Alto", "Cochabamba"],
-  "Brazil": ["SÃ£o Paulo", "Rio de Janeiro", "Salvador", "Recife"],
+  "Brazil": ["São Paulo", "Rio de Janeiro", "Salvador", "Recife"],
   "Canada": ["Toronto", "Montreal", "Vancouver", "Calgary"],
-  "Chile": ["ValparaÃ­so", "ConcepciÃ³n", "Antofagasta"],
+  "Chile": ["Valparaíso", "Concepción", "Antofagasta"],
   "China": ["Shanghai", "Guangzhou", "Shenzhen", "Chengdu"],
-  "Colombia": ["MedellÃ­n", "Cali", "Barranquilla"],
-  "Costa Rica": ["LimÃ³n", "Alajuela", "Cartago"],
-  "Cuba": ["Santiago de Cuba", "CamagÃ¼ey", "HolguÃ­n"],
-  "Czechia": ["Brno", "Ostrava", "PlzeÅˆ"],
+  "Colombia": ["Medellín", "Cali", "Barranquilla"],
+  "Costa Rica": ["Limón", "Alajuela", "Cartago"],
+  "Cuba": ["Santiago de Cuba", "Camagüey", "Holguín"],
+  "Czechia": ["Brno", "Ostrava", "Plzeň"],
   "Democratic Republic of the Congo": ["Lubumbashi", "Mbuji-Mayi", "Kisangani"],
   "Denmark": ["Aarhus", "Odense", "Aalborg"],
-  "Dominican Republic": ["Santiago de los Caballeros", "La Romana", "San Pedro de MacorÃ­s"],
+  "Dominican Republic": ["Santiago de los Caballeros", "La Romana", "San Pedro de Macorís"],
   "Ecuador": ["Guayaquil", "Cuenca", "Manta"],
   "Egypt": ["Alexandria", "Giza", "Luxor"],
   "Ethiopia": ["Dire Dawa", "Mekelle", "Bahir Dar"],
@@ -510,10 +510,10 @@ const domesticCityMap = normalizeData({
   "Ghana": ["Kumasi", "Tamale", "Takoradi"],
   "Greece": ["Thessaloniki", "Patras", "Heraklion"],
   "Guatemala": ["Quetzaltenango", "Escuintla", "Puerto Barrios"],
-  "Haiti": ["Cap-HaÃ¯tien", "Les Cayes", "GonaÃ¯ves"],
+  "Haiti": ["Cap-Haïtien", "Les Cayes", "Gonaïves"],
   "Honduras": ["San Pedro Sula", "La Ceiba", "Choloma"],
   "Hungary": ["Debrecen", "Szeged", "Miskolc"],
-  "Iceland": ["Akureyri", "KeflavÃ­k", "Selfoss"],
+  "Iceland": ["Akureyri", "Keflavík", "Selfoss"],
   "India": ["Mumbai", "Bengaluru", "Chennai", "Kolkata"],
   "Indonesia": ["Surabaya", "Bandung", "Medan", "Makassar"],
   "Iran": ["Mashhad", "Isfahan", "Shiraz", "Tabriz"],
@@ -527,7 +527,7 @@ const domesticCityMap = normalizeData({
   "Kazakhstan": ["Almaty", "Shymkent", "Karaganda"],
   "Kenya": ["Mombasa", "Kisumu", "Nakuru"],
   "Malaysia": ["George Town", "Johor Bahru", "Ipoh"],
-  "Mexico": ["Guadalajara", "Monterrey", "Tijuana", "CancÃºn"],
+  "Mexico": ["Guadalajara", "Monterrey", "Tijuana", "Cancún"],
   "Morocco": ["Casablanca", "Marrakesh", "Tangier"],
   "Mozambique": ["Beira", "Nampula", "Matola"],
   "Myanmar": ["Yangon", "Mandalay", "Mawlamyine"],
@@ -537,19 +537,19 @@ const domesticCityMap = normalizeData({
   "Nigeria": ["Lagos", "Kano", "Ibadan", "Port Harcourt"],
   "Norway": ["Bergen", "Trondheim", "Stavanger"],
   "Pakistan": ["Karachi", "Lahore", "Faisalabad", "Peshawar"],
-  "Panama": ["ColÃ³n", "David", "Santiago de Veraguas"],
+  "Panama": ["Colón", "David", "Santiago de Veraguas"],
   "Peru": ["Arequipa", "Cusco", "Trujillo"],
   "Philippines": ["Cebu City", "Davao", "Quezon City"],
-  "Poland": ["KrakÃ³w", "Å�Ã³dÅº", "WrocÅ‚aw", "GdaÅ„sk"],
+  "Poland": ["Kraków", "Łódź", "Wrocław", "Gdańsk"],
   "Portugal": ["Porto", "Braga", "Coimbra"],
-  "Romania": ["Cluj-Napoca", "TimiÈ™oara", "IaÈ™i"],
+  "Romania": ["Cluj-Napoca", "Timișoara", "Iași"],
   "Russia": ["Saint Petersburg", "Novosibirsk", "Yekaterinburg", "Kazan"],
   "Saudi Arabia": ["Jeddah", "Mecca", "Medina", "Dammam"],
   "South Africa": ["Cape Town", "Johannesburg", "Durban", "Bloemfontein"],
   "South Korea": ["Busan", "Incheon", "Daegu", "Gwangju"],
   "Spain": ["Barcelona", "Valencia", "Seville", "Bilbao"],
   "Sri Lanka": ["Colombo", "Kandy", "Galle"],
-  "Sweden": ["Gothenburg", "MalmÃ¶", "Uppsala"],
+  "Sweden": ["Gothenburg", "Malmö", "Uppsala"],
   "Switzerland": ["Zurich", "Geneva", "Basel", "Lausanne"],
   "Tanzania": ["Dar es Salaam", "Mwanza", "Arusha", "Zanzibar City"],
   "Thailand": ["Chiang Mai", "Pattaya", "Phuket"],
@@ -569,14 +569,14 @@ const domesticCityMap = normalizeData({
   "Bermuda": ["St. George's", "Somerset Village"],
   "Cayman Islands": ["West Bay", "Bodden Town"],
   "Curacao": ["Otrobanda", "Scharloo"],
-  "Faroe Islands": ["KlaksvÃ­k", "RunavÃ­k"],
+  "Faroe Islands": ["Klaksvík", "Runavík"],
   "French Polynesia": ["Faaa", "Punaauia"],
   "Guam": ["Dededo", "Tamuning"],
   "Hong Kong": ["Kowloon", "Tsuen Wan"],
   "Macau": ["Taipa", "Coloane"],
   "Martinique": ["Le Lamentin", "Le Robert"],
-  "New Caledonia": ["Mont-Dore", "DumbÃ©a"],
-  "Puerto Rico": ["Ponce", "MayagÃ¼ez", "BayamÃ³n"],
+  "New Caledonia": ["Mont-Dore", "Dumbéa"],
+  "Puerto Rico": ["Ponce", "Mayagüez", "Bayamón"],
   "Sint Maarten": ["Lowlands", "Simpson Bay"],
   "Taiwan": ["Kaohsiung", "Taichung", "Tainan"],
   "U.S. Virgin Islands": ["Christiansted", "Frederiksted"]
@@ -1267,8 +1267,8 @@ function sortAlphabetically(items) {
 
 function renderPromptFlag(country) {
   if (country === "GAME_OVER") {
-    promptFlagEl.style.backgroundImage = "";
-    promptFlagEl.textContent = "😭";
+    promptFlagEl.style.backgroundImage = `url("${getGameOverIconUrl()}")`;
+    promptFlagEl.textContent = "";
     promptFlagEl.setAttribute("role", "img");
     promptFlagEl.setAttribute("aria-label", "Crying face");
     return;
@@ -1291,6 +1291,10 @@ function renderPromptFlag(country) {
 
 function getFlagUrl(code) {
   return `https://flagcdn.com/w40/${code.toLowerCase()}.png`;
+}
+
+function getGameOverIconUrl() {
+  return "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23ffd76a'/%3E%3Ccircle cx='22' cy='26' r='4' fill='%23132533'/%3E%3Ccircle cx='42' cy='26' r='4' fill='%23132533'/%3E%3Cpath d='M22 46c3-5 17-5 20 0' fill='none' stroke='%23132533' stroke-linecap='round' stroke-width='4'/%3E%3Cpath d='M18 20c3-3 7-4 11-3' fill='none' stroke='%23132533' stroke-linecap='round' stroke-width='3'/%3E%3Cpath d='M35 17c4-1 8 0 11 3' fill='none' stroke='%23132533' stroke-linecap='round' stroke-width='3'/%3E%3Cpath d='M16 34c1 6 1 11-2 16' fill='none' stroke='%235aa7ff' stroke-linecap='round' stroke-width='4'/%3E%3Cpath d='M48 34c-1 6-1 11 2 16' fill='none' stroke='%235aa7ff' stroke-linecap='round' stroke-width='4'/%3E%3C/svg%3E";
 }
 
 function bindPress(button, onChoose) {
