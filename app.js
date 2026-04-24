@@ -1,4 +1,4 @@
-const APP_VERSION = "20260424-capitals19";
+const APP_VERSION = "20260424-capitals20";
 const HIGH_SCORE_KEY = "capitalsGameHighScore";
 
 const rounds = normalizeData([
@@ -937,7 +937,7 @@ window.addEventListener("resize", () => {
 
 function resetGame() {
   stopRoundTimer();
-  state.deck = buildDebugDeck();
+  state.deck = shuffleList(rounds);
   state.currentRound = null;
   state.points = 0;
   state.correct = 0;
@@ -958,19 +958,6 @@ function resetGame() {
   scoreContextEl.textContent = `of ${rounds.length} countries / territories`;
   fitScoreText();
   startRound();
-}
-
-function buildDebugDeck() {
-  return rounds
-    .slice()
-    .sort((left, right) => {
-      const lengthDifference = left.country.length - right.country.length;
-      if (lengthDifference !== 0) {
-        return lengthDifference;
-      }
-
-      return Math.random() - 0.5;
-    });
 }
 
 function startRound() {
@@ -1064,6 +1051,7 @@ function finishGame(reason = "complete") {
   state.isComplete = true;
   stopRoundTimer();
   promptCountryEl.textContent = reason === "strikes" ? "Game Over" : "Finished";
+  renderPromptFlag("");
   optionsGridEl.innerHTML = "";
   if (reason === "strikes" && state.points > state.startingHighScore) {
     celebrationEl.classList.remove("wrong");

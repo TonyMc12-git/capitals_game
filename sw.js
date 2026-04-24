@@ -1,5 +1,5 @@
-const CACHE_NAME = "capitals-game-pwa-v19";
-const APP_VERSION = "20260424-capitals19";
+const CACHE_NAME = "capitals-game-pwa-v20";
+const APP_VERSION = "20260424-capitals20";
 
 self.addEventListener("install", (event) => {
   event.waitUntil(self.skipWaiting());
