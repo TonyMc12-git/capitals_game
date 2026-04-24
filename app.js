@@ -1,4 +1,4 @@
-const APP_VERSION = "20260424-capitals17";
+const APP_VERSION = "20260424-capitals18";
 const HIGH_SCORE_KEY = "capitalsGameHighScore";
 
 const rounds = normalizeData([
@@ -1195,7 +1195,7 @@ function fitOptionText() {
 }
 
 function fitPromptText() {
-  fitTextToBox(promptCountryEl, { minSize: 14, step: 1 });
+  fitTextToBox(promptCountryEl, { minSize: 12, step: 1 });
 }
 
 function fitScoreText() {
