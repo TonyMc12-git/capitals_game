@@ -1,7 +1,7 @@
-const APP_VERSION = "20260424-capitals13";
+const APP_VERSION = "20260424-capitals14";
 const HIGH_SCORE_KEY = "capitalsGameHighScore";
 
-const rounds = [
+const rounds = normalizeData([
   { country: "Afghanistan", capital: "Kabul" },
   { country: "Albania", capital: "Tirana" },
   { country: "Algeria", capital: "Algiers" },
@@ -239,10 +239,9 @@ const rounds = [
   { country: "Vatican City", capital: "Vatican City" },
   { country: "Wallis and Futuna", capital: "Mata-Utu" },
   { country: "Western Sahara", capital: "El Aaiún" }
-];
+]);
 
-const capitalPool = [...new Set(rounds.map((round) => round.capital))];
-const nearbyCapitalMap = {
+const nearbyCapitalMap = normalizeData({
   "Afghanistan": ["Dhaka", "Islamabad", "Kathmandu", "MalÃ©", "New Delhi", "Sri Jayawardenepura Kotte", "Tehran", "Thimphu", "Abu Dhabi", "Amman", "Ankara", "Ashgabat"],
   "Albania": ["Belgrade", "Bucharest", "Podgorica", "Pristina", "Sarajevo", "Skopje", "Sofia", "Zagreb", "Amsterdam", "Andorra la Vella", "Athens", "Berlin"],
   "Algeria": ["Cairo", "El AaiÃºn", "Khartoum", "Rabat", "Tripoli", "Tunis", "Abuja", "Accra", "Addis Ababa", "Antananarivo", "Asmara", "Bamako"],
@@ -480,8 +479,8 @@ const nearbyCapitalMap = {
   "Vatican City": ["Andorra la Vella", "Athens", "City of San Marino", "Gibraltar", "Lisbon", "Madrid", "Nicosia", "Rome", "Valletta", "Amsterdam", "Belgrade", "Berlin"],
   "Wallis and Futuna": ["Adamstown", "Alofi", "Apia", "Avarua", "Fakaofo", "Funafuti", "Nuku'alofa", "Pago Pago", "PapeetÄ“", "Canberra", "Flying Fish Cove", "HagÃ¥tÃ±a"],
   "Western Sahara": ["Algiers", "Cairo", "Khartoum", "Rabat", "Tripoli", "Tunis", "Abuja", "Accra", "Addis Ababa", "Antananarivo", "Asmara", "Bamako"]
-};
-const domesticCityMap = {
+});
+const domesticCityMap = normalizeData({
   "Afghanistan": ["Herat", "Kandahar", "Mazar-i-Sharif"],
   "Algeria": ["Oran", "Constantine", "Annaba"],
   "Angola": ["Huambo", "Lobito", "Benguela"],
@@ -581,7 +580,8 @@ const domesticCityMap = {
   "Sint Maarten": ["Lowlands", "Simpson Bay"],
   "Taiwan": ["Kaohsiung", "Taichung", "Tainan"],
   "U.S. Virgin Islands": ["Christiansted", "Frederiksted"]
-};
+});
+const capitalPool = [...new Set(rounds.map((round) => round.capital))];
 
 const promptCountryEl = document.getElementById("prompt-country");
 const optionsGridEl = document.getElementById("options-grid");
@@ -597,6 +597,57 @@ const celebrationKickerEl = document.getElementById("celebration-kicker");
 const celebrationTitleEl = document.getElementById("celebration-title");
 const celebrationCopyEl = document.getElementById("celebration-copy");
 const celebrationButtonEl = document.getElementById("celebration-button");
+
+function normalizeData(value) {
+  if (typeof value === "string") {
+    return repairText(value);
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((entry) => normalizeData(entry));
+  }
+
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, entry]) => [repairText(key), normalizeData(entry)])
+    );
+  }
+
+  return value;
+}
+
+function repairText(text) {
+  return [
+    ["Ã¡", "\u00E1"],
+    ["Ã¢", "\u00E2"],
+    ["Ã£", "\u00E3"],
+    ["Ã¤", "\u00E4"],
+    ["Ã¥", "\u00E5"],
+    ["Ã§", "\u00E7"],
+    ["Ã¨", "\u00E8"],
+    ["Ã©", "\u00E9"],
+    ["Ãª", "\u00EA"],
+    ["Ã«", "\u00EB"],
+    ["Ã­", "\u00ED"],
+    ["Ã®", "\u00EE"],
+    ["Ã³", "\u00F3"],
+    ["Ã´", "\u00F4"],
+    ["Ã¶", "\u00F6"],
+    ["Ãº", "\u00FA"],
+    ["Ã¼", "\u00FC"],
+    ["Ã±", "\u00F1"],
+    ["Ä\u0081", "\u0101"],
+    ["Äƒ", "\u0103"],
+    ["Ä“", "\u0113"],
+    ["Å‚", "\u0142"],
+    ["Å„", "\u0144"],
+    ["Åˆ", "\u0148"],
+    ["Åº", "\u017A"],
+    ["Å»", "\u017B"],
+    ["È™", "\u0219"],
+    ["È›", "\u021B"]
+  ].reduce((fixed, [broken, corrected]) => fixed.split(broken).join(corrected), text);
+}
 
 const state = {
   deck: [],
