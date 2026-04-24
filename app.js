@@ -1,4 +1,4 @@
-const APP_VERSION = "20260424-capitals20";
+const APP_VERSION = "20260424-capitals21";
 const HIGH_SCORE_KEY = "capitalsGameHighScore";
 
 const rounds = normalizeData([
@@ -1051,7 +1051,7 @@ function finishGame(reason = "complete") {
   state.isComplete = true;
   stopRoundTimer();
   promptCountryEl.textContent = reason === "strikes" ? "Game Over" : "Finished";
-  renderPromptFlag("");
+  renderPromptFlag(reason === "strikes" ? "GAME_OVER" : "");
   optionsGridEl.innerHTML = "";
   if (reason === "strikes" && state.points > state.startingHighScore) {
     celebrationEl.classList.remove("wrong");
@@ -1266,6 +1266,14 @@ function sortAlphabetically(items) {
 }
 
 function renderPromptFlag(country) {
+  if (country === "GAME_OVER") {
+    promptFlagEl.style.backgroundImage = "";
+    promptFlagEl.textContent = "😭";
+    promptFlagEl.setAttribute("role", "img");
+    promptFlagEl.setAttribute("aria-label", "Crying face");
+    return;
+  }
+
   const countryCode = countryCodeMap[country];
   if (!countryCode) {
     promptFlagEl.style.backgroundImage = "";
