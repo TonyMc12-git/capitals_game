@@ -9,11 +9,13 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Capitals Game">
   <meta name="mobile-web-app-capable" content="yes">
-  <link rel="manifest" href="manifest.webmanifest?v=20260424-capitals16">
+  <link rel="manifest" href="manifest.webmanifest?v=20260424-capitals17">
+  <link rel="preconnect" href="https://flagcdn.com">
+  <link rel="dns-prefetch" href="https://flagcdn.com">
   <link rel="icon" href="favicon-192.png" type="image/png">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=20260424-capitals16">
-  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="apple-touch-icon.png?v=20260424-capitals16">
-  <link rel="stylesheet" href="styles.css?v=20260424-capitals16">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=20260424-capitals17">
+  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="apple-touch-icon.png?v=20260424-capitals17">
+  <link rel="stylesheet" href="styles.css?v=20260424-capitals17">
 </head>
 <body>
   <main class="app-shell">
@@ -39,7 +41,9 @@
 
       <div class="prompt-stage">
         <div class="prompt-card" aria-label="Country prompt">
-          <span class="prompt-kicker">Country</span>
+          <span class="prompt-kicker prompt-kicker-flag">
+            <span class="prompt-flag" id="prompt-flag" aria-hidden="true"></span>
+          </span>
           <strong class="prompt-title" id="prompt-country">Loading...</strong>
         </div>
       </div>
@@ -59,6 +63,6 @@
 
   <div class="bonus-toast" id="bonus-toast" aria-live="assertive" aria-hidden="true"></div>
 
-  <script src="app.js?v=20260424-capitals16"></script>
+  <script src="app.js?v=20260424-capitals17"></script>
 </body>
 </html>

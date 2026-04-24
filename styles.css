@@ -191,6 +191,31 @@ h1 {
   letter-spacing: 0.08em;
 }
 
+.prompt-kicker-flag {
+  width: 34px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  letter-spacing: 0;
+}
+
+.prompt-flag {
+  width: 28px;
+  height: 18px;
+  display: block;
+  border-radius: 4px;
+  border: 1px solid rgba(19, 37, 51, 0.16);
+  background-color: rgba(19, 37, 51, 0.08);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  box-shadow: 0 2px 6px rgba(8, 30, 18, 0.1);
+  overflow: hidden;
+  font-size: 15px;
+  line-height: 18px;
+  text-align: center;
+}
+
 .prompt-title {
   font-family: Georgia, "Palatino Linotype", serif;
   font-size: clamp(2rem, 7vw, 4rem);
@@ -480,6 +505,18 @@ h1 {
     height: 108px;
     gap: 4px;
     padding: 10px;
+  }
+
+  .prompt-kicker-flag {
+    width: 30px;
+    height: 20px;
+  }
+
+  .prompt-flag {
+    width: 24px;
+    height: 16px;
+    font-size: 13px;
+    line-height: 16px;
   }
 
   .prompt-title {
