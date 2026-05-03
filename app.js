@@ -1,4 +1,4 @@
-const APP_VERSION = "20260503-capitals23";
+const APP_VERSION = "20260503-capitals24";
 const HIGH_SCORE_PREFIX = "capitalsGameHighScore";
 const DEFAULT_DIFFICULTY_LABEL = "This is too hard \u{1F62D}";
 const CHANGED_DIFFICULTY_LABEL = "Change selection";
@@ -1046,6 +1046,8 @@ const state = {
   isLocked: false,
   isComplete: false,
   isDifficultyMenuOpen: false,
+  pendingGameOverReason: null,
+  pendingNewBestGameOver: false,
   feedbackTimer: null,
   feedbackReadyAt: 0,
   bonusTimer: null
@@ -1069,6 +1071,24 @@ celebrationButtonEl.addEventListener("click", () => {
   }
 
   hideCelebration();
+  if (state.pendingNewBestGameOver) {
+    state.pendingNewBestGameOver = false;
+    finishGame("strikes");
+    return;
+  }
+
+  if (state.pendingGameOverReason) {
+    const pendingReason = state.pendingGameOverReason;
+    state.pendingGameOverReason = null;
+    if (pendingReason === "strikes" && state.points > state.startingHighScore) {
+      state.pendingNewBestGameOver = true;
+      showNewBestCelebration();
+      return;
+    }
+    finishGame(pendingReason);
+    return;
+  }
+
   if (!state.isComplete) {
     startRound();
   }
@@ -1098,6 +1118,8 @@ function resetGame(countrySetKey, optionCount = state.optionCount, keepMenuOpen 
   state.correct = 0;
   state.presented = 0;
   state.strikes = 0;
+  state.pendingGameOverReason = null;
+  state.pendingNewBestGameOver = false;
   state.correctStreak = 0;
   state.streakElapsedMs = 0;
   state.timerSegmentStartedAt = 0;
@@ -1260,11 +1282,10 @@ function chooseCity(city, button) {
   }
 
   renderScore();
-  if (!isCorrect && state.strikes >= 5) {
-    finishGame("strikes");
-    return;
-  }
   showRoundResult(isCorrect);
+  if (!isCorrect && state.strikes >= 5) {
+    state.pendingGameOverReason = "strikes";
+  }
 }
 
 function showRoundResult(isCorrect) {
@@ -1275,6 +1296,14 @@ function showRoundResult(isCorrect) {
   showFeedback();
 }
 
+function showNewBestCelebration() {
+  celebrationEl.classList.remove("wrong");
+  celebrationKickerEl.textContent = "New Best";
+  celebrationTitleEl.textContent = `${state.points} points`;
+  celebrationCopyEl.textContent = "New high score before strike five.";
+  showFeedback();
+}
+
 function finishGame(reason = "complete") {
   state.isLocked = true;
   state.isComplete = true;
@@ -1282,14 +1311,6 @@ function finishGame(reason = "complete") {
   promptCountryEl.textContent = reason === "strikes" ? "Game Over" : "Finished";
   renderPromptFlag(reason === "strikes" ? "GAME_OVER" : "");
   optionsGridEl.innerHTML = "";
-  if (reason === "strikes" && state.points > state.startingHighScore) {
-    celebrationEl.classList.remove("wrong");
-    celebrationKickerEl.textContent = "New Best";
-    celebrationTitleEl.textContent = `${state.points} points`;
-    celebrationCopyEl.textContent = "New high score before strike five.";
-    showFeedback();
-    return;
-  }
 
   if (reason === "complete") {
     celebrationEl.classList.remove("wrong");
