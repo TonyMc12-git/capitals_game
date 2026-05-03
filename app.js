@@ -1,5 +1,7 @@
-const APP_VERSION = "20260424-capitals22";
-const HIGH_SCORE_KEY = "capitalsGameHighScore";
+const APP_VERSION = "20260503-capitals23";
+const HIGH_SCORE_PREFIX = "capitalsGameHighScore";
+const DEFAULT_DIFFICULTY_LABEL = "This is too hard \u{1F62D}";
+const CHANGED_DIFFICULTY_LABEL = "Change selection";
 
 const rounds = normalizeData([
   { country: "Afghanistan", capital: "Kabul" },
@@ -822,6 +824,135 @@ const countryCodeMap = {
   "Western Sahara": "EH"
 };
 const capitalPool = [...new Set(rounds.map((round) => round.capital))];
+const regionCodeGroups = {
+  africa: [
+    "AO", "BJ", "BW", "BF", "BI", "CM", "CV", "CF", "TD", "KM", "CG", "CD", "CI", "DJ",
+    "DZ", "EG", "EH", "ER", "ET", "GA", "GH", "GM", "GN", "GW", "GQ", "KE", "LR", "LS",
+    "LY", "MA", "MG", "ML", "MR", "MU", "MW", "MZ", "NA", "NE", "NG", "RW", "SC", "SD",
+    "SH", "SL", "SN", "SO", "SS", "ST", "SZ", "TG", "TN", "TZ", "UG", "YT", "ZA", "ZM",
+    "ZW"
+  ],
+  europe: [
+    "AD", "AL", "AT", "AX", "BA", "BE", "BG", "BY", "CH", "CZ", "DE", "DK", "EE", "ES",
+    "FI", "FO", "FR", "GB", "GG", "GI", "GR", "HR", "HU", "IE", "IM", "IS", "IT", "JE",
+    "LI", "LT", "LU", "LV", "MC", "MD", "ME", "MK", "MT", "NL", "NO", "PL", "PT", "RO",
+    "RS", "RU", "SE", "SI", "SK", "SM", "UA", "VA", "XK"
+  ],
+  asia: [
+    "AE", "AF", "AM", "AZ", "BD", "BH", "BN", "BT", "CC", "CN", "CX", "CY", "GE", "HK",
+    "ID", "IL", "IN", "IO", "IQ", "IR", "JO", "JP", "KG", "KH", "KP", "KR", "KW", "KZ",
+    "LA", "LB", "LK", "MM", "MN", "MO", "MV", "MY", "NP", "OM", "PH", "PK", "PS", "QA",
+    "SA", "SG", "SY", "TH", "TJ", "TL", "TM", "TR", "TW", "UZ", "VN", "YE"
+  ],
+  americas: [
+    "AG", "AI", "AR", "AW", "BB", "BL", "BM", "BO", "BQ", "BR", "BS", "BZ", "CA", "CL",
+    "CO", "CR", "CU", "CW", "DM", "DO", "EC", "FK", "GD", "GL", "GT", "GY", "HN", "HT",
+    "JM", "KN", "KY", "LC", "MF", "MQ", "MS", "MX", "NI", "PA", "PE", "PM", "PR", "PY",
+    "SR", "SV", "SX", "TC", "TT", "US", "UY", "VC", "VE", "VG", "VI"
+  ],
+  australasia: [
+    "AS", "AU", "CK", "FJ", "FM", "GU", "KI", "MH", "MP", "NC", "NF", "NR", "NU", "NZ",
+    "PF", "PG", "PN", "PW", "SB", "TK", "TO", "TV", "VU", "WF", "WS"
+  ]
+};
+
+const unPresetCodes = {
+  africa: new Set([
+    "DZ", "AO", "BJ", "BW", "BF", "BI", "CV", "CM", "CF", "TD", "KM", "CG", "CD", "CI",
+    "DJ", "EG", "GQ", "ER", "SZ", "ET", "GA", "GM", "GH", "GN", "GW", "KE", "LS", "LR",
+    "LY", "MG", "MW", "ML", "MR", "MU", "MA", "MZ", "NA", "NE", "NG", "RW", "ST", "SN",
+    "SC", "SL", "SO", "ZA", "SS", "SD", "TZ", "TG", "TN", "UG", "ZM", "ZW"
+  ]),
+  europe: new Set([
+    "AL", "AD", "AT", "BY", "BE", "BA", "BG", "HR", "CZ", "DK", "EE", "FI", "FR", "DE",
+    "GR", "HU", "IS", "IE", "IT", "LV", "LI", "LT", "LU", "MT", "MD", "MC", "ME", "NL",
+    "MK", "NO", "PL", "PT", "RO", "RU", "SM", "RS", "SK", "SI", "ES", "SE", "CH", "UA",
+    "GB"
+  ]),
+  asia: new Set([
+    "AF", "AM", "AZ", "BH", "BD", "BT", "BN", "KH", "CN", "CY", "GE", "IN", "ID", "IR",
+    "IQ", "IL", "JP", "JO", "KZ", "KW", "KG", "LA", "LB", "MY", "MV", "MN", "MM", "NP",
+    "KP", "OM", "PK", "PH", "QA", "SA", "SG", "KR", "LK", "SY", "TJ", "TH", "TL", "TR",
+    "TM", "AE", "UZ", "VN", "YE"
+  ]),
+  americas: new Set([
+    "AG", "AR", "BS", "BB", "BZ", "BO", "BR", "CA", "CL", "CO", "CR", "CU", "DM", "DO",
+    "EC", "SV", "GD", "GT", "GY", "HT", "HN", "JM", "MX", "NI", "PA", "PY", "PE", "KN",
+    "LC", "VC", "SR", "TT", "US", "UY", "VE"
+  ]),
+  australasia: new Set([
+    "AU", "FJ", "KI", "MH", "FM", "NR", "NZ", "PW", "PG", "WS", "SB", "TO", "TV", "VU"
+  ])
+};
+
+const nonUnCodeSet = new Set([
+  "AS", "AI", "AX", "AW", "BM", "VG", "KY", "CX", "CK", "CC", "CW", "FK", "FO", "PF", "GI",
+  "GL", "GU", "GG", "HK", "IO", "IM", "JE", "XK", "MO", "MS", "NC", "NF", "NU", "MP", "PS",
+  "PN", "PR", "BL", "SH", "SX", "GS", "TF", "TW", "TK", "TC", "VI", "VA", "WF", "EH"
+]);
+
+const countrySetConfigs = {
+  combined: {
+    rounds,
+    scoreContext: "",
+    menuLabel: ""
+  },
+  un: {
+    rounds: rounds.filter((round) => {
+      const code = countryCodeMap[round.country];
+      return code && !nonUnCodeSet.has(code);
+    }),
+    scoreContext: "",
+    menuLabel: ""
+  },
+  africa: {
+    rounds: rounds.filter((round) => unPresetCodes.africa.has(countryCodeMap[round.country])),
+    scoreContext: "",
+    menuLabel: ""
+  },
+  europe: {
+    rounds: rounds.filter((round) => unPresetCodes.europe.has(countryCodeMap[round.country])),
+    scoreContext: "",
+    menuLabel: ""
+  },
+  asia: {
+    rounds: rounds.filter((round) => unPresetCodes.asia.has(countryCodeMap[round.country])),
+    scoreContext: "",
+    menuLabel: ""
+  },
+  americas: {
+    rounds: rounds.filter((round) => unPresetCodes.americas.has(countryCodeMap[round.country])),
+    scoreContext: "",
+    menuLabel: ""
+  },
+  australasia: {
+    rounds: rounds.filter((round) => unPresetCodes.australasia.has(countryCodeMap[round.country])),
+    scoreContext: "",
+    menuLabel: ""
+  },
+  nonun: {
+    rounds: rounds.filter((round) => nonUnCodeSet.has(countryCodeMap[round.country])),
+    scoreContext: "",
+    menuLabel: ""
+  }
+};
+
+countrySetConfigs.combined.scoreContext = `of ${countrySetConfigs.combined.rounds.length} countries / territories`;
+countrySetConfigs.combined.menuLabel = `All Countries/territories (${countrySetConfigs.combined.rounds.length})`;
+countrySetConfigs.un.scoreContext = `of ${countrySetConfigs.un.rounds.length} UN countries`;
+countrySetConfigs.un.menuLabel = `UN countries only (${countrySetConfigs.un.rounds.length})`;
+countrySetConfigs.africa.scoreContext = `of ${countrySetConfigs.africa.rounds.length} African UN countries`;
+countrySetConfigs.africa.menuLabel = `Africa UN only (${countrySetConfigs.africa.rounds.length})`;
+countrySetConfigs.europe.scoreContext = `of ${countrySetConfigs.europe.rounds.length} European UN countries`;
+countrySetConfigs.europe.menuLabel = `Europe UN only (${countrySetConfigs.europe.rounds.length})`;
+countrySetConfigs.asia.scoreContext = `of ${countrySetConfigs.asia.rounds.length} Asian UN countries`;
+countrySetConfigs.asia.menuLabel = `Asia UN only (${countrySetConfigs.asia.rounds.length})`;
+countrySetConfigs.americas.scoreContext = `of ${countrySetConfigs.americas.rounds.length} American UN countries`;
+countrySetConfigs.americas.menuLabel = `Americas UN only (${countrySetConfigs.americas.rounds.length})`;
+countrySetConfigs.australasia.scoreContext = `of ${countrySetConfigs.australasia.rounds.length} Australasian UN countries`;
+countrySetConfigs.australasia.menuLabel = `Australiasia UN only (${countrySetConfigs.australasia.rounds.length})`;
+countrySetConfigs.nonun.scoreContext = `of ${countrySetConfigs.nonun.rounds.length} non-UN countries / territories`;
+countrySetConfigs.nonun.menuLabel = `Non-UN only (${countrySetConfigs.nonun.rounds.length})`;
 
 const promptCountryEl = document.getElementById("prompt-country");
 const promptFlagEl = document.getElementById("prompt-flag");
@@ -829,10 +960,15 @@ const strikeEls = [...document.querySelectorAll("#strike-track .strike-pill")];
 const optionsGridEl = document.getElementById("options-grid");
 const scoreEl = document.getElementById("score");
 const scoreContextEl = document.getElementById("score-context");
+const modeButtonEl = document.getElementById("mode-button");
 const pointsScoreEl = document.getElementById("points-score");
 const roundTimerEl = document.getElementById("round-timer");
 const highScoreEl = document.getElementById("high-score");
 const newGameButtonEl = document.getElementById("new-game-button");
+const difficultyMenuEl = document.getElementById("difficulty-menu");
+const difficultyMenuOptionsEl = document.getElementById("difficulty-menu-options");
+const difficultyToggleEl = document.getElementById("difficulty-toggle");
+const difficultyMenuCloseEl = document.getElementById("difficulty-menu-close");
 const bonusToastEl = document.getElementById("bonus-toast");
 const celebrationEl = document.getElementById("celebration");
 const celebrationKickerEl = document.getElementById("celebration-kicker");
@@ -892,6 +1028,8 @@ function repairText(text) {
 }
 
 const state = {
+  countrySetKey: "combined",
+  optionCount: 20,
   deck: [],
   currentRound: null,
   points: 0,
@@ -907,15 +1045,24 @@ const state = {
   resetTimerOnNextRound: false,
   isLocked: false,
   isComplete: false,
+  isDifficultyMenuOpen: false,
   feedbackTimer: null,
   feedbackReadyAt: 0,
   bonusTimer: null
 };
 
 registerServiceWorker();
+configureDifficultyMenu();
 renderPoints();
-resetGame();
-newGameButtonEl.addEventListener("click", resetGame);
+resetGame("combined", 20);
+newGameButtonEl.addEventListener("click", () => resetGame(state.countrySetKey, state.optionCount));
+modeButtonEl.addEventListener("click", openDifficultyMenu);
+difficultyMenuCloseEl.addEventListener("click", closeDifficultyMenu);
+difficultyMenuEl.addEventListener("pointerdown", (event) => {
+  if (event.target === difficultyMenuEl) {
+    closeDifficultyMenu();
+  }
+});
 celebrationButtonEl.addEventListener("click", () => {
   if (Date.now() < state.feedbackReadyAt) {
     return;
@@ -932,12 +1079,20 @@ window.addEventListener("resize", () => {
     fitOptionText();
     fitPromptText();
     fitScoreText();
+    if (state.isDifficultyMenuOpen) {
+      fitDifficultyMenuText();
+    }
   });
 });
 
-function resetGame() {
+function resetGame(countrySetKey, optionCount = state.optionCount, keepMenuOpen = false) {
   stopRoundTimer();
-  state.deck = shuffleList(rounds);
+  if (!keepMenuOpen) {
+    closeDifficultyMenu();
+  }
+  state.countrySetKey = countrySetKey;
+  state.optionCount = optionCount;
+  state.deck = shuffleList(getCurrentRounds());
   state.currentRound = null;
   state.points = 0;
   state.correct = 0;
@@ -949,15 +1104,79 @@ function resetGame() {
   state.resetTimerOnNextRound = false;
   state.isLocked = false;
   state.isComplete = false;
+  promptFlagEl.style.backgroundColor = "";
   state.highScore = readHighScore();
   state.startingHighScore = state.highScore;
   renderScore();
   renderPoints();
   renderStrikes();
   renderTimer(0);
-  scoreContextEl.textContent = `of ${rounds.length} countries / territories`;
+  scoreContextEl.textContent = getCurrentCountrySet().scoreContext;
+  updateDifficultyMenuButtons();
+  updateDifficultyToggleButton();
+  updateModeButtonLabel();
   fitScoreText();
   startRound();
+}
+
+function configureDifficultyMenu() {
+  [...difficultyMenuOptionsEl.querySelectorAll(".difficulty-option[data-country-set]")].forEach((button) => {
+    const countrySetKey = button.dataset.countrySet;
+    const countrySet = countrySetConfigs[countrySetKey];
+    if (!countrySet) {
+      return;
+    }
+
+    button.textContent = countrySet.menuLabel;
+    button.addEventListener("click", () => {
+      resetGame(countrySetKey, state.optionCount);
+    });
+  });
+
+  difficultyToggleEl.addEventListener("click", () => {
+    resetGame(state.countrySetKey, state.optionCount === 20 ? 5 : 20, true);
+  });
+}
+
+function updateDifficultyMenuButtons() {
+  [...difficultyMenuOptionsEl.querySelectorAll(".difficulty-option[data-country-set]")].forEach((button) => {
+    button.classList.toggle("active", button.dataset.countrySet === state.countrySetKey);
+  });
+}
+
+function updateDifficultyToggleButton() {
+  difficultyToggleEl.textContent = state.optionCount === 20 ? "5 options only" : "All 20 options";
+}
+
+function updateModeButtonLabel() {
+  const isChangedSelection = state.optionCount === 5 && state.countrySetKey !== "combined";
+  modeButtonEl.textContent = isChangedSelection ? CHANGED_DIFFICULTY_LABEL : DEFAULT_DIFFICULTY_LABEL;
+}
+
+function openDifficultyMenu() {
+  if (state.isComplete) {
+    return;
+  }
+
+  state.isDifficultyMenuOpen = true;
+  updateDifficultyMenuButtons();
+  updateDifficultyToggleButton();
+  difficultyMenuEl.classList.add("show");
+  difficultyMenuEl.setAttribute("aria-hidden", "false");
+  window.requestAnimationFrame(fitDifficultyMenuText);
+}
+
+function closeDifficultyMenu() {
+  state.isDifficultyMenuOpen = false;
+  difficultyMenuEl.classList.remove("show");
+  difficultyMenuEl.setAttribute("aria-hidden", "true");
+}
+
+function fitDifficultyMenuText() {
+  [difficultyToggleEl, ...difficultyMenuOptionsEl.querySelectorAll(".difficulty-option"), difficultyMenuCloseEl]
+    .forEach((element) => {
+      fitTextToBox(element, { minSize: 9, step: 0.5 });
+    });
 }
 
 function startRound() {
@@ -971,7 +1190,10 @@ function startRound() {
   promptCountryEl.textContent = state.currentRound.country;
   renderPromptFlag(state.currentRound.country);
   renderOptions(buildOptions(state.currentRound));
+  updateModeButtonLabel();
+  scoreContextEl.textContent = getCurrentCountrySet().scoreContext;
   fitPromptText();
+  fitScoreText();
   startRoundTimer();
 }
 
@@ -979,13 +1201,20 @@ function buildOptions(round) {
   const options = new Set([round.capital]);
   const domesticPool = shuffleList((domesticCityMap[round.country] || []).filter((city) => city !== round.capital));
   const nearbyPool = shuffleList((nearbyCapitalMap[round.country] || []).filter((city) => city !== round.capital));
-  const fallbackPool = shuffleList(capitalPool.filter((city) => city !== round.capital));
+  const fallbackPool = shuffleList(getCurrentCapitalPool().filter((city) => city !== round.capital));
+  const targetSize = state.optionCount;
 
-  addOptionsFromPool(options, domesticPool, randomInt(2, 4));
-  addOptionsFromPool(options, nearbyPool, randomInt(6, 10));
-  addOptionsFromPool(options, fallbackPool, 20 - options.size);
+  if (state.optionCount === 5) {
+    addOptionsFromPool(options, domesticPool, randomInt(1, 2), targetSize);
+    addOptionsFromPool(options, nearbyPool, randomInt(2, 3), targetSize);
+    addOptionsFromPool(options, fallbackPool, targetSize - options.size, targetSize);
+  } else {
+    addOptionsFromPool(options, domesticPool, randomInt(2, 4), targetSize);
+    addOptionsFromPool(options, nearbyPool, randomInt(6, 10), targetSize);
+    addOptionsFromPool(options, fallbackPool, targetSize - options.size, targetSize);
+  }
 
-  return sortAlphabetically([...options].slice(0, 20));
+  return sortAlphabetically([...options].slice(0, targetSize));
 }
 
 function renderOptions(options) {
@@ -1179,7 +1408,7 @@ function updateHighScore() {
 
   state.highScore = state.points;
   try {
-    localStorage.setItem(HIGH_SCORE_KEY, String(state.highScore));
+    localStorage.setItem(getHighScoreKey(), String(state.highScore));
   } catch {
     // Ignore localStorage issues.
   }
@@ -1187,11 +1416,15 @@ function updateHighScore() {
 
 function readHighScore() {
   try {
-    const storedScore = Number(localStorage.getItem(HIGH_SCORE_KEY));
+    const storedScore = Number(localStorage.getItem(getHighScoreKey()));
     return Number.isFinite(storedScore) && storedScore > 0 ? storedScore : 0;
   } catch {
     return 0;
   }
+}
+
+function getHighScoreKey() {
+  return `${HIGH_SCORE_PREFIX}:${state.countrySetKey}:${state.optionCount}`;
 }
 
 function showBonusToast(message) {
@@ -1216,7 +1449,9 @@ function fitPromptText() {
 }
 
 function fitScoreText() {
-  fitTextToBox(scoreContextEl, { minSize: 9, step: 0.5 });
+  [scoreContextEl, modeButtonEl].forEach((element) => {
+    fitTextToBox(element, { minSize: 9, step: 0.5 });
+  });
 }
 
 function fitTextToBox(element, options = {}) {
@@ -1244,9 +1479,9 @@ function shuffleList(items) {
   return copy;
 }
 
-function addOptionsFromPool(options, pool, limit) {
+function addOptionsFromPool(options, pool, limit, maxSize = 20) {
   for (const item of pool) {
-    if (options.size >= 20 || limit <= 0) {
+    if (options.size >= maxSize || limit <= 0) {
       break;
     }
     if (options.has(item)) {
@@ -1263,6 +1498,18 @@ function randomInt(min, max) {
 
 function sortAlphabetically(items) {
   return items.slice().sort((left, right) => left.localeCompare(right, undefined, { sensitivity: "base" }));
+}
+
+function getCurrentCountrySet() {
+  return countrySetConfigs[state.countrySetKey];
+}
+
+function getCurrentRounds() {
+  return getCurrentCountrySet().rounds;
+}
+
+function getCurrentCapitalPool() {
+  return [...new Set(getCurrentRounds().map((round) => round.capital))];
 }
 
 function renderPromptFlag(country) {

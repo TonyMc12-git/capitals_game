@@ -159,6 +159,104 @@ h1 {
   overflow-wrap: anywhere;
 }
 
+.mode-button {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  min-height: 24px;
+  padding: 5px 8px;
+  border: 1px solid rgba(19, 37, 27, 0.14);
+  border-radius: 9px;
+  background: #eaf3ec;
+  color: var(--ink);
+  font-size: 0.66rem;
+  font-weight: 900;
+  line-height: 1;
+  cursor: pointer;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+
+.difficulty-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 25;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(5, 22, 13, 0);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease, background 160ms ease;
+}
+
+.difficulty-menu.show {
+  opacity: 1;
+  background: rgba(5, 22, 13, 0.22);
+  pointer-events: auto;
+}
+
+.difficulty-menu-card {
+  width: min(420px, 100%);
+  padding: 18px;
+  border-radius: 18px;
+  background: var(--panel-strong);
+  border: 1px solid var(--line);
+  box-shadow: 0 30px 80px rgba(3, 19, 12, 0.38);
+  transform: scale(0.94);
+  transition: transform 180ms ease;
+}
+
+.difficulty-menu.show .difficulty-menu-card {
+  transform: scale(1);
+}
+
+.difficulty-menu-title {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--ink);
+  font-size: 1rem;
+  font-weight: 900;
+  text-align: center;
+}
+
+.difficulty-menu-options {
+  display: grid;
+  gap: 8px;
+}
+
+.difficulty-option,
+.difficulty-menu-close {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid rgba(19, 37, 27, 0.14);
+  border-radius: 12px;
+  background: #fffaf0;
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 900;
+  line-height: 1.05;
+  cursor: pointer;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+
+.difficulty-option.active {
+  background: #d9f8e8;
+  border-color: rgba(22, 133, 90, 0.4);
+  color: #075c3a;
+}
+
+.difficulty-menu-close {
+  margin-top: 10px;
+  background: #eaf3ec;
+}
+
 .prompt-stage {
   display: grid;
   grid-template-rows: 28px minmax(0, 1fr);
@@ -523,6 +621,42 @@ h1 {
     margin-top: 0;
     font-size: 0.74rem;
     line-height: 1;
+  }
+
+  .mode-button {
+    grid-column: 1 / -1;
+    margin-top: 0;
+    min-height: 23px;
+    padding: 4px 5px;
+    font-size: 0.68rem;
+    line-height: 1;
+  }
+
+  .difficulty-menu {
+    padding: 10px;
+  }
+
+  .difficulty-menu-card {
+    padding: 12px;
+    border-radius: 14px;
+  }
+
+  .difficulty-menu-title {
+    margin-bottom: 8px;
+    font-size: 0.88rem;
+  }
+
+  .difficulty-menu-options {
+    gap: 6px;
+  }
+
+  .difficulty-option,
+  .difficulty-menu-close {
+    min-height: 36px;
+    padding: 7px 8px;
+    font-size: 0.76rem;
+    line-height: 1;
+    border-radius: 10px;
   }
 
   .prompt-stage {

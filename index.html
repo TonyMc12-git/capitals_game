@@ -9,13 +9,13 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Capitals Game">
   <meta name="mobile-web-app-capable" content="yes">
-  <link rel="manifest" href="manifest.webmanifest?v=20260424-capitals22">
+  <link rel="manifest" href="manifest.webmanifest?v=20260503-capitals23">
   <link rel="preconnect" href="https://flagcdn.com">
   <link rel="dns-prefetch" href="https://flagcdn.com">
   <link rel="icon" href="favicon-192.png" type="image/png">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=20260424-capitals22">
-  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="apple-touch-icon.png?v=20260424-capitals22">
-  <link rel="stylesheet" href="styles.css?v=20260424-capitals22">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=20260503-capitals23">
+  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="apple-touch-icon.png?v=20260503-capitals23">
+  <link rel="stylesheet" href="styles.css?v=20260503-capitals23">
 </head>
 <body>
   <main class="app-shell">
@@ -35,6 +35,7 @@
             <span class="score-label">Score</span>
             <strong id="score">0 / 0</strong>
             <span class="score-context" id="score-context">of 0 countries</span>
+            <button class="mode-button" id="mode-button" type="button">This is too hard &#128557;</button>
           </div>
         </div>
       </header>
@@ -70,6 +71,24 @@
 
   <div class="bonus-toast" id="bonus-toast" aria-live="assertive" aria-hidden="true"></div>
 
-  <script src="app.js?v=20260424-capitals22"></script>
+  <div class="difficulty-menu" id="difficulty-menu" aria-hidden="true">
+    <div class="difficulty-menu-card" role="dialog" aria-modal="true" aria-labelledby="difficulty-menu-title">
+      <strong class="difficulty-menu-title" id="difficulty-menu-title">Make better choices...</strong>
+      <div class="difficulty-menu-options" id="difficulty-menu-options">
+        <button class="difficulty-option difficulty-toggle" id="difficulty-toggle" type="button">5 options only</button>
+        <button class="difficulty-option" data-country-set="combined" type="button">All Countries/territories (237)</button>
+        <button class="difficulty-option" data-country-set="un" type="button">UN countries only (193)</button>
+        <button class="difficulty-option" data-country-set="africa" type="button">Africa UN only</button>
+        <button class="difficulty-option" data-country-set="europe" type="button">Europe UN only</button>
+        <button class="difficulty-option" data-country-set="asia" type="button">Asia UN only</button>
+        <button class="difficulty-option" data-country-set="americas" type="button">Americas UN only</button>
+        <button class="difficulty-option" data-country-set="australasia" type="button">Australiasia UN only</button>
+        <button class="difficulty-option" data-country-set="nonun" type="button">Non-UN only</button>
+      </div>
+      <button class="difficulty-menu-close" id="difficulty-menu-close" type="button">Back</button>
+    </div>
+  </div>
+
+  <script src="app.js?v=20260503-capitals23"></script>
 </body>
 </html>
