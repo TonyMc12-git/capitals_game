@@ -1,4 +1,4 @@
-const APP_VERSION = "20260503-capitals24";
+const APP_VERSION = "20260503-capitals25";
 const HIGH_SCORE_PREFIX = "capitalsGameHighScore";
 const DEFAULT_DIFFICULTY_LABEL = "This is too hard \u{1F62D}";
 const CHANGED_DIFFICULTY_LABEL = "Change selection";
